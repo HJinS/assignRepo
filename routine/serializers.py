@@ -45,24 +45,15 @@ class RoutineSerializer(serializers.ModelSerializer):
         return instance
 
 
-class RemoveRoutineSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ('routine_id', 'account_id')
-        model = Routine
-
-    def delete(self, instance, validated_data):
-        routine_id = validated_data.get('routine_id', instance.routine_id)
-        account_id = validated_data.get('account_id', instance.account_id)
-        query_set = Routine.objects.filter(routine_id=routine_id, account_id=account_id)
-        return query_set.delete()
-
-
 class GetRoutineListSerializer(serializers.ModelSerializer):
     result = serializers.SerializerMethodField('get_result_prefetch')
 
     def get_result_prefetch(self, result_obj):
-        result = result_obj.routine_result[0].result
-        return result
+        try:
+            result = result_obj.routine_result[0].result
+            return result
+        except Exception:
+            return []
 
     class Meta:
         fields = ['goal', 'routine_id', 'title', 'result']
@@ -74,8 +65,11 @@ class GetRoutineSerializer(serializers.ModelSerializer):
     days = serializers.SerializerMethodField('get_day_prefetch')
 
     def get_result_prefetch(self, result_obj):
-        result = result_obj.routine_result[0].result
-        return result
+        try:
+            result = result_obj.routine_result[0].result
+            return result
+        except Exception:
+            return []
 
     def get_day_prefetch(self, day_obj):
         day_list = day_obj.days

@@ -8,9 +8,6 @@ import uuid
 
 
 class RoutineResultFactory(factory.django.DjangoModelFactory):
-    def __init__(self):
-        self.today = datetime.today()
-
     class Meta:
         model = RoutineResult
         django_get_or_create = ('routine_result_id', )

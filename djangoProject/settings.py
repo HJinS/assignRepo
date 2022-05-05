@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'routine',
     'routine_day',
     'routine_result',
-    'user',
+    'routine_user',
 ]
 
 MIDDLEWARE = [
@@ -84,11 +84,26 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = 'user.RoutineUser'
+AUTH_USER_MODEL = 'routine_user.RoutineUser'
 
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
+
+REST_AUTH_SERIALIZERS = {
+    "LOGIN_SERIALIZER": "routine_user.serializers.CustomLoginSerializer",
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "routine_user.serializers.CustomRegisterSerializer",
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+REST_USE_JWT = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -124,9 +139,12 @@ DATABASES = {
         'PASSWORD': 'routine!@#$',
         'HOST': 'localhost',
         'PORT': '5432',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'test',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -158,7 +176,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+SITE_ID = 1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 

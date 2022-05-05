@@ -13,7 +13,7 @@ class CreateRoutineView(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data.update({'account_id': request.user.account_id})
+        data.update({'account_id': request.user.id})
         serializer = RoutineSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             routine = serializer.create(serializer.validated_data)
@@ -78,8 +78,9 @@ class UpdateRoutineView(APIView):
     def post(self, request):
         serializer = RoutineSerializer()
         routine_id = request.data['routine_id']
+        account_id = request.user.id
         try:
-            routine_obj = Routine.objects.get(routine_id=routine_id)
+            routine_obj = Routine.objects.get(routine_id=routine_id, account_id=account_id)
         except Exception:
             return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
         serializer.update(routine_obj, request.data)

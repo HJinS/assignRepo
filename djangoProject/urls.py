@@ -28,8 +28,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
-    path('api/user/', include('dj_rest_auth.urls')),
-    path('api/user/', include('dj_rest_auth.registration.urls')),
+    path('api/routine_user/', include('dj_rest_auth.urls')),
+    path('api/routine_user/', include('dj_rest_auth.registration.urls')),
 
     path('api/routine/', include('routine.urls')),
 ]

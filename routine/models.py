@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-from user.models import RoutineUser
+from routine_user.models import RoutineUser
 
 
 class Routine(models.Model):

@@ -2,11 +2,10 @@ from rest_framework.test import APIClient, APITestCase
 from ..tests.routine_factory import RoutineFactory
 from routine_day.routine_day_factory import RoutineDayFactory
 from routine_result.routine_result_factory import RoutineResultFactory
-from user.user_factory import UserFactory
+from routine_user.user_factory import UserFactory
 
 
 class RoutineTest(APITestCase):
-
     @classmethod
     def setUpClass(cls):
         super(RoutineTest, cls).setUpClass()
@@ -29,10 +28,10 @@ class RoutineTest(APITestCase):
         self.client.force_authenticate(user=self.user)
         for _ in range(2):
             routine = RoutineFactory.create(account_id=self.user)
-            routine_result = RoutineResultFactory.create(routine_id=routine)
-            routine_day = RoutineDayFactory.create_batch(3, routine_id=routine)
+            RoutineResultFactory.create(routine_id=routine)
+            RoutineDayFactory.create_batch(3, routine_id=routine)
         request_data = {
-            "account_id": self.user.account_id,
+            "account_id": self.user.id,
             "today": "2022-05-04"
         }
         response = self.client.post('/api/routine/getRoutineList', request_data)
@@ -42,10 +41,10 @@ class RoutineTest(APITestCase):
         self.client.force_authenticate(user=self.user)
         for _ in range(2):
             routine = RoutineFactory.create(account_id=self.user)
-            routine_result = RoutineResultFactory.create(routine_id=routine)
-            routine_day = RoutineDayFactory.create_batch(3, routine_id=routine)
+            RoutineResultFactory.create(routine_id=routine)
+            RoutineDayFactory.create_batch(3, routine_id=routine)
         request_data = {
-            "account_id": self.user.account_id,
+            "account_id": self.user.id,
             "routine_id": routine.routine_id
         }
         response = self.client.post('/api/routine/getRoutine', request_data)
@@ -55,10 +54,10 @@ class RoutineTest(APITestCase):
         self.client.force_authenticate(user=self.user)
         for _ in range(2):
             routine = RoutineFactory.create(account_id=self.user)
-            routine_result = RoutineResultFactory.create(routine_id=routine)
-            routine_day = RoutineDayFactory.create_batch(3, routine_id=routine)
+            RoutineResultFactory.create(routine_id=routine)
+            RoutineDayFactory.create_batch(3, routine_id=routine)
         request_data = {
-            "account_id": self.user.account_id,
+            "account_id": self.user.id,
             "routine_id": routine.routine_id
         }
 
@@ -69,8 +68,8 @@ class RoutineTest(APITestCase):
         self.client.force_authenticate(user=self.user)
         for _ in range(2):
             routine = RoutineFactory.create(account_id=self.user)
-            routine_result = RoutineResultFactory.create(routine_id=routine)
-            routine_day = RoutineDayFactory.create_batch(3, routine_id=routine)
+            RoutineResultFactory.create(routine_id=routine)
+            RoutineDayFactory.create_batch(3, routine_id=routine)
 
         request_data = {
             "routine_id": routine.routine_id,

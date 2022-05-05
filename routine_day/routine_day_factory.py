@@ -7,9 +7,6 @@ import factory.fuzzy
 
 
 class RoutineDayFactory(factory.django.DjangoModelFactory):
-    def __init__(self):
-        self.today = datetime.today()
-
     class Meta:
         model = RoutineDay
     routine_id = factory.SubFactory(RoutineFactory)
