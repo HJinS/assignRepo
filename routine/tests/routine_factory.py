@@ -15,7 +15,7 @@ class RoutineFactory(factory.django.DjangoModelFactory):
     account_id = factory.SubFactory(UserFactory)
     title = factory.Faker('sentence', nb_words=2)
     category = factory.fuzzy.FuzzyChoice(["MIRACLE", "HOMEWORK"])
-    goal = factory.Faker('sentence', nb_words=5)
+    goal = factory.Faker('sentence', nb_words=4)
     is_alarm = factory.fuzzy.FuzzyInteger(0, 1)
     is_deleted = False
     created_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from django.db.models import (Prefetch, Q)
 
 from .models import Routine
-from routine_day.models import RoutineDay
 from routine_result.models import RoutineResult
 
 
@@ -16,7 +15,7 @@ class CreateRoutineView(APIView):
         data.update({'account_id': request.user.id})
         serializer = RoutineSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            routine = serializer.create(serializer.validated_data)
+            routine = serializer.save()
             return_data = {
                 "data": {
                     "routine_id": routine.routine_id
@@ -34,11 +33,8 @@ class GetRoutineListView(APIView):
     def post(self, request):
         account_id = request.data['account_id']
         created_at = request.data['today']
-        filter_q = Q()
-        filter_q &= Q(account_id=account_id)
-        filter_q &= Q(created_at=created_at)
-        query_set = Routine.objects.filter(filter_q).prefetch_related(
-            Prefetch('routine_result_relate', RoutineResult.objects.all(), 'routine_result'))
+        query_set = RoutineResult.objects.filter(created_at=created_at).select_related('routine_id').filter(routine_id__account_id=account_id)
+
         serializer = GetRoutineListSerializer(query_set, many=True)
         return_data = {
             "data": serializer.data,
@@ -58,14 +54,16 @@ class GetRoutineView(APIView):
         except Exception:
             return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
         filter_q = Q()
-        filter_q &= Q(account_id=account_id)
+        filter_q &= Q(routine_id__account_id=account_id)
         filter_q &= Q(routine_id=routine_id)
-        query_set = Routine.objects.filter(filter_q).prefetch_related(
-            Prefetch('routine_result_relate', RoutineResult.objects.all(), 'routine_result')).prefetch_related(
-            Prefetch('routine_day_relate', RoutineDay.objects.all(), 'days'))
+        query_set = RoutineResult.objects.select_related('routine_id').filter(filter_q).prefetch_related(Prefetch('routine_id__routine_day_relate', to_attr='routine_day_res'))
         serializer = GetRoutineSerializer(query_set, many=True)
+        try:
+            serialized_data = serializer.data[0]
+        except:
+            serialized_data = []
         return_data = {
-            "data": serializer.data[0],
+            "data": serialized_data,
             "message": {
                 "msg": "루틴 조회 성공", "status": "ROUTINE_DETAIL_OK"
             }
@@ -76,23 +74,25 @@ class GetRoutineView(APIView):
 class UpdateRoutineView(APIView):
 
     def post(self, request):
-        serializer = RoutineSerializer()
         routine_id = request.data['routine_id']
         account_id = request.user.id
         try:
             routine_obj = Routine.objects.get(routine_id=routine_id, account_id=account_id)
-        except Exception:
+        except Routine.DoesNotExist:
             return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
-        serializer.update(routine_obj, request.data)
-        return_data = {
-            "data": {
-                "routine_id": routine_id
-            },
-            "message": {
-                "msg": "루틴 수정 성공", "status": "ROUTINE_UPDATE_OK"
+        serializer = RoutineSerializer(routine_obj, request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return_data = {
+                "data": {
+                    "routine_id": routine_id
+                },
+                "message": {
+                    "msg": "루틴 수정 성공", "status": "ROUTINE_UPDATE_OK"
+                }
             }
-        }
-        return Response(return_data, status=status.HTTP_200_OK)
+            return Response(return_data, status=status.HTTP_200_OK)
+        return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteRoutineView(APIView):

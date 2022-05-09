@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Routine
 from routine_result.models import RoutineResult
 from routine_day.models import RoutineDay
+from routine_day.serializers import RoutineDaySerializer
+from routine_result.serializers import RoutineResultSerializer
 
 
 class RoutineSerializer(serializers.ModelSerializer):
@@ -11,28 +13,42 @@ class RoutineSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Routine
 
+    def validate_category(self, value):
+        if value not in ('HOMEWORK', 'MIRACLE'):
+            raise serializers.ValidationError("This field must be HOMEWORK or MIRACLE")
+        return value
+
+    def validate_days(self, value):
+        value_set = set(value)
+        if not value_set & {'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'} == value_set:
+            raise serializers.ValidationError("This is not a day")
+        if not value:
+            raise serializers.ValidationError("Day is required")
+        return value
+
     def create(self, validated_data):
+        if validated_data['category'] not in ('HOMEWORK', 'MIRACLE'):
+            self.fail('Invalid data')
         days = validated_data.pop('days')
         routine = Routine.objects.create(**validated_data)
-        RoutineResult.objects.create(routine_id=routine)
+        routine_result = RoutineResultSerializer(data={'routine_id': routine.routine_id, 'days': days})
+        if routine_result.is_valid(raise_exception=True):
+            routine_result.save()
         for day in days:
-            routine_day = RoutineDay.objects.create(routine_id=routine)
-            routine_day.day = day
+            routine_day = RoutineDaySerializer(data={'routine_id': routine.routine_id, 'day': day})
+            if not routine_day.is_valid(raise_exception=True):
+                raise serializers.ValidationError("Invalid data")
             routine_day.save()
         return routine
 
     def update(self, instance, validated_data):
         days = validated_data.get('days', [])
-        routine_result = RoutineResult.objects.filter(routine_id=instance)
 
         instance.title = validated_data.get('title', instance.title)
         instance.category = validated_data.get('category', instance.category)
         instance.goal = validated_data.get('goal', instance.goal)
         instance.is_alarm = validated_data.get('is_alarm', instance.is_alarm)
         instance.save()
-        if len(routine_result) == 1:
-            routine_result[0].result = validated_data.get('result', routine_result[0].result)
-            routine_result[0].save()
 
         if len(days) > 0:
             routine_day = RoutineDay.objects.filter(routine_id=instance)
@@ -46,38 +62,38 @@ class RoutineSerializer(serializers.ModelSerializer):
 
 
 class GetRoutineListSerializer(serializers.ModelSerializer):
-    result = serializers.SerializerMethodField('get_result_prefetch')
+    goal = serializers.SerializerMethodField('get_result_goal')
+    title = serializers.SerializerMethodField('get_result_title')
 
-    def get_result_prefetch(self, result_obj):
-        try:
-            result = result_obj.routine_result[0].result
-            return result
-        except Exception:
-            return []
+    def get_result_goal(self, result_obj):
+        return result_obj.routine_id.goal
+
+    def get_result_title(self, result_obj):
+        return result_obj.routine_id.title
 
     class Meta:
-        fields = ['goal', 'routine_id', 'title', 'result']
-        model = Routine
+        fields = ['result', 'goal', 'routine_id', 'title']
+        model = RoutineResult
 
 
 class GetRoutineSerializer(serializers.ModelSerializer):
-    result = serializers.SerializerMethodField('get_result_prefetch')
+    goal = serializers.SerializerMethodField('get_result_goal')
+    title = serializers.SerializerMethodField('get_result_title')
     days = serializers.SerializerMethodField('get_day_prefetch')
 
-    def get_result_prefetch(self, result_obj):
-        try:
-            result = result_obj.routine_result[0].result
-            return result
-        except Exception:
-            return []
+    def get_result_goal(self, result_obj):
+        return result_obj.routine_id.goal
+
+    def get_result_title(self, result_obj):
+        return result_obj.routine_id.title
 
     def get_day_prefetch(self, day_obj):
-        day_list = day_obj.days
+        day_list = day_obj.routine_id.routine_day_res
         days = []
         for day in day_list:
             days.append(day.day)
         return days
 
     class Meta:
-        fields = ['goal', 'routine_id', 'title', 'result', 'days']
-        model = Routine
+        fields = ['result', 'goal', 'routine_id', 'title', 'days']
+        model = RoutineResult

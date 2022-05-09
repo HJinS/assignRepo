@@ -1,3 +1,5 @@
 /.coverage
 /db.sqlite3
 /test_db
+/dumptestdb.json
+/erl_crash.dump
