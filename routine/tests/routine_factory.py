@@ -1,7 +1,7 @@
 from ..models import Routine
 from datetime import datetime
 from pytz import timezone
-from routine_user.user_factory import UserFactory
+from routine_user.tests.user_factory import UserFactory
 
 import factory.fuzzy
 import uuid

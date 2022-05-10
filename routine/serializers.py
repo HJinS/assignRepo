@@ -20,15 +20,13 @@ class RoutineSerializer(serializers.ModelSerializer):
 
     def validate_days(self, value):
         value_set = set(value)
-        if not value_set & {'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'} == value_set:
-            raise serializers.ValidationError("This is not a day")
         if not value:
             raise serializers.ValidationError("Day is required")
+        if not value_set & {'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'} == value_set:
+            raise serializers.ValidationError("This is not a day")
         return value
 
     def create(self, validated_data):
-        if validated_data['category'] not in ('HOMEWORK', 'MIRACLE'):
-            self.fail('Invalid data')
         days = validated_data.pop('days')
         routine = Routine.objects.create(**validated_data)
         routine_result = RoutineResultSerializer(data={'routine_id': routine.routine_id, 'days': days})
@@ -76,16 +74,8 @@ class GetRoutineListSerializer(serializers.ModelSerializer):
         model = RoutineResult
 
 
-class GetRoutineSerializer(serializers.ModelSerializer):
-    goal = serializers.SerializerMethodField('get_result_goal')
-    title = serializers.SerializerMethodField('get_result_title')
+class GetRoutineSerializer(GetRoutineListSerializer):
     days = serializers.SerializerMethodField('get_day_prefetch')
-
-    def get_result_goal(self, result_obj):
-        return result_obj.routine_id.goal
-
-    def get_result_title(self, result_obj):
-        return result_obj.routine_id.title
 
     def get_day_prefetch(self, day_obj):
         day_list = day_obj.routine_id.routine_day_res

@@ -1,11 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+
+router = DefaultRouter(trailing_slash=False)
+router.register(r'routine', views.RoutineViewSet)
 
 
 urlpatterns = [
-    path('createRoutine', views.CreateRoutineView.as_view()),
-    path('updateRoutine', views.UpdateRoutineView.as_view()),
-    path('getRoutine', views.GetRoutineView.as_view()),
-    path('getRoutineList', views.GetRoutineListView.as_view()),
-    path('deleteRoutine', views.DeleteRoutineView.as_view()),
+    path('', include(router.urls)),
 ]

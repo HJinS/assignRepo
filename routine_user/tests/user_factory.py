@@ -1,4 +1,4 @@
-from .models import RoutineUser
+from routine_user.models import RoutineUser
 from faker import Faker
 
 import uuid
