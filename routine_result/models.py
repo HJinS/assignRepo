@@ -8,5 +8,5 @@ class RoutineResult(models.Model):
     routine_id = models.ForeignKey(Routine, on_delete=models.CASCADE, related_name='routine_result_relate')
     result = models.CharField(max_length=4, default='NOT')
     is_deleted = models.BooleanField(default=False)
-    created_at = models.DateField(auto_now_add=True)
-    modified_at = models.DateField(auto_now=True)
+    created_at = models.DateField(auto_now_add=False)
+    modified_at = models.DateField(auto_now=False)

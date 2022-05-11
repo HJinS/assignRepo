@@ -14,7 +14,6 @@ class RoutineUpdateTest(RoutineTest):
         request_data = self.get_update_request_data_partial()
         response = self.client.patch(f'/api/v1/routine/{routine.routine_id}', request_data)
         self.assertContains(response, "ROUTINE_UPDATE_OK", status_code=200)
-
         request_data = self.get_update_request_data_full()
         response = self.client.patch(f'/api/v1/routine/{routine.routine_id}', request_data)
         self.assertContains(response, "ROUTINE_UPDATE_OK", status_code=200)

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django_celery_results',
+    'drf_yasg',
 
     'allauth',
     'allauth.account',

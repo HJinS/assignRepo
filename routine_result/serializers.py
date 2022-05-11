@@ -2,8 +2,11 @@ from rest_framework import serializers
 from .models import RoutineResult
 from datetime import datetime, timedelta
 
+
 class RoutineResultSerializer(serializers.ModelSerializer):
-    days = serializers.ListSerializer(child=serializers.CharField(max_length=4), allow_null=True)
+    days = serializers.ListSerializer(child=serializers.CharField(max_length=4), required=False)
+    created_at = serializers.DateField(required=False)
+    modified_at = serializers.DateField(required=False)
 
     class Meta:
         fields = '__all__'
@@ -25,16 +28,20 @@ class RoutineResultSerializer(serializers.ModelSerializer):
             'MON': 0, 'TUE': 1, 'WED': 2, 'THU': 3, 'FRI': 4, 'SAT': 5, 'SUN': 6
         }
         routine_id = validated_data['routine_id']
-        days = validated_data['days']
-        if days is None:
+        try:
+            days = validated_data['days']
+        except:
             routine_result = RoutineResult.objects.create(**validated_data)
             return routine_result
         result_list = []
         for day in days:
             today = datetime.today().weekday()
             day_int = day_to_int[day]
-            time_delta = timedelta(days=(day_int - today))
-            routine_result_time = datetime.today() + time_delta
-            routine_result = RoutineResult.objects.create(routine_id=routine_id, created_at=routine_result_time, modified_at=routine_result_time)
-            result_list.append(routine_result)
+            diff = day_int - today
+            if diff >= 0:
+                time_delta = timedelta(days=diff)
+                routine_result_time = (datetime.today() + time_delta).strftime('%Y-%m-%d')
+                routine_result = RoutineResult(routine_id=routine_id, created_at=routine_result_time, modified_at=routine_result_time)
+                routine_result.save()
+                result_list.append(routine_result)
         return result_list

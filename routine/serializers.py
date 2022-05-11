@@ -4,6 +4,8 @@ from routine_result.models import RoutineResult
 from routine_day.models import RoutineDay
 from routine_day.serializers import RoutineDaySerializer
 from routine_result.serializers import RoutineResultSerializer
+from datetime import datetime, timedelta
+from pytz import timezone
 
 
 class RoutineSerializer(serializers.ModelSerializer):
@@ -41,22 +43,48 @@ class RoutineSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         days = validated_data.get('days', [])
-
         instance.title = validated_data.get('title', instance.title)
         instance.category = validated_data.get('category', instance.category)
         instance.goal = validated_data.get('goal', instance.goal)
         instance.is_alarm = validated_data.get('is_alarm', instance.is_alarm)
         instance.save()
-
         if len(days) > 0:
-            routine_day = RoutineDay.objects.filter(routine_id=instance)
-            for day_obj in routine_day:
-                day_obj.delete()
-            for day in days:
-                new_routine_day = RoutineDay.objects.create(routine_id=instance)
-                new_routine_day.day = day
-                new_routine_day.save()
+            self.update_days(instance, days)
+            self.update_results(instance, days)
         return instance
+
+    def update_days(self, instance, days):
+        routine_day = RoutineDay.objects.filter(routine_id=instance)
+        for day_obj in routine_day:
+            day_obj.delete()
+        for day in days:
+            new_routine_day = RoutineDay.objects.create(routine_id=instance)
+            new_routine_day.day = day
+            new_routine_day.save()
+
+    def update_results(self, instance, days):
+        day_to_int = {
+            'MON': 0, 'TUE': 1, 'WED': 2, 'THU': 3, 'FRI': 4, 'SAT': 5, 'SUN': 6
+        }
+        today = datetime.now(timezone('Asia/Seoul'))
+        today_day = today.weekday()
+        start_of_week = today + timedelta(days=(-today_day + 7))
+        end_of_week = start_of_week + timedelta(days=(6 + 7))
+        routine_result = RoutineResult.objects.filter(routine_id=instance, created_at__range=[start_of_week, end_of_week])
+        if len(routine_result) > 0:
+            routine_result.delete()
+        for day in days:
+            routine_result_date = start_of_week + timedelta(day_to_int[day])
+            data = {
+                'routine_id': instance.routine_id,
+                'created_at': routine_result_date.strftime('%Y-%m-%d'),
+                'modified_at': routine_result_date.strftime('%Y-%m-%d')
+            }
+            new_routine_result = RoutineResultSerializer(data=data)
+            if new_routine_result.is_valid(raise_exception=True):
+                new_routine_result.save()
+
+
 
 
 class GetRoutineListSerializer(serializers.ModelSerializer):
