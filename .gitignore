@@ -4,3 +4,4 @@
 /dumptestdb.json
 /erl_crash.dump
 /.python-version
+migrations
