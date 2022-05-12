@@ -42,8 +42,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
-    path('api/routine-user/', include('dj_rest_auth.urls')),
-    path('api/routine-user', include('dj_rest_auth.registration.urls')),
+    path('api/users/', include('dj_rest_auth.urls')),
+    path('api/users/register/', include('dj_rest_auth.registration.urls')),
 
     path('api/v1/', include('routine.urls')),
 ]
@@ -53,4 +53,3 @@ if settings.DEBUG:
         re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name="schema-json"),
         re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),    ]
-

@@ -9,7 +9,7 @@ class RoutineDaySerializer(serializers.ModelSerializer):
 
     def validate_day(self, value):
         if value not in ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'):
-            raise serializers.ValidationError("This is not a day")
+            raise serializers.ValidationError('This is not a day')
         return value
 
     def create(self, validated_data):

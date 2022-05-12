@@ -14,13 +14,13 @@ class RoutineResultSerializer(serializers.ModelSerializer):
 
     def validate_result(self, value):
         if value not in ('NOT', 'TRY', 'DONE'):
-            raise serializers.ValidationError("This field must be NOT or TRY or DONE")
+            raise serializers.ValidationError('This field must be NOT or TRY or DONE')
         return value
 
     def validate_days(self, value):
         value_set = set(value)
         if not value_set & {'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'} == value_set:
-            raise serializers.ValidationError("This is not a day")
+            raise serializers.ValidationError('This is not a day')
         return value
 
     def create(self, validated_data):
@@ -45,3 +45,10 @@ class RoutineResultSerializer(serializers.ModelSerializer):
                 routine_result.save()
                 result_list.append(routine_result)
         return result_list
+
+    def update(self, instance, validated_data):
+        result = validated_data['result']
+        instance.result = result
+        instance.save()
+        return instance
+

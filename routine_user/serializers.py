@@ -8,8 +8,8 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def get_cleaned_data(self):
         return {
-            "password1": self.validated_data.get("password1", ""),
-            "email": self.validated_data.get("email", ""),
+            'password1': self.validated_data.get('password1', ''),
+            'email': self.validated_data.get('email', ''),
         }
 
 

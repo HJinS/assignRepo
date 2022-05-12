@@ -14,7 +14,7 @@ class RoutineFactory(factory.django.DjangoModelFactory):
     routine_id = factory.LazyAttribute(lambda _: uuid.uuid4())
     account_id = factory.SubFactory(UserFactory)
     title = factory.Faker('sentence', nb_words=2)
-    category = factory.fuzzy.FuzzyChoice(["MIRACLE", "HOMEWORK"])
+    category = factory.fuzzy.FuzzyChoice(['MIRACLE', 'HOMEWORK'])
     goal = factory.Faker('sentence', nb_words=4)
     is_alarm = factory.fuzzy.FuzzyInteger(0, 1)
     is_deleted = False

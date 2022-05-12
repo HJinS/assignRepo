@@ -13,7 +13,7 @@ class RoutineResultFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('routine_result_id', )
     routine_result_id = factory.LazyAttribute(lambda _: uuid.uuid4())
     routine_id = factory.SubFactory(RoutineFactory)
-    result = factory.fuzzy.FuzzyChoice(["NOT", "TRY", "DONE"])
+    result = factory.fuzzy.FuzzyChoice(['NOT', 'TRY', 'DONE'])
     is_deleted = False
     created_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))
     modified_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))

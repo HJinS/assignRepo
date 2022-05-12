@@ -10,7 +10,7 @@ class RoutineDayFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = RoutineDay
     routine_id = factory.SubFactory(RoutineFactory)
-    day = factory.fuzzy.FuzzyChoice(["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"])
+    day = factory.fuzzy.FuzzyChoice(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'])
     created_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))
     modified_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))
 

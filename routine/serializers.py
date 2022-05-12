@@ -17,15 +17,15 @@ class RoutineSerializer(serializers.ModelSerializer):
 
     def validate_category(self, value):
         if value not in ('HOMEWORK', 'MIRACLE'):
-            raise serializers.ValidationError("This field must be HOMEWORK or MIRACLE")
+            raise serializers.ValidationError('This field must be HOMEWORK or MIRACLE')
         return value
 
     def validate_days(self, value):
         value_set = set(value)
         if not value:
-            raise serializers.ValidationError("Day is required")
+            raise serializers.ValidationError('Day is required')
         if not value_set & {'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'} == value_set:
-            raise serializers.ValidationError("This is not a day")
+            raise serializers.ValidationError('This is not a day')
         return value
 
     def create(self, validated_data):
@@ -37,7 +37,8 @@ class RoutineSerializer(serializers.ModelSerializer):
         for day in days:
             routine_day = RoutineDaySerializer(data={'routine_id': routine.routine_id, 'day': day})
             if not routine_day.is_valid(raise_exception=True):
-                raise serializers.ValidationError("Invalid data")
+                print("check_serializer")
+                raise serializers.ValidationError('Invalid data')
             routine_day.save()
         return routine
 
@@ -83,8 +84,6 @@ class RoutineSerializer(serializers.ModelSerializer):
             new_routine_result = RoutineResultSerializer(data=data)
             if new_routine_result.is_valid(raise_exception=True):
                 new_routine_result.save()
-
-
 
 
 class GetRoutineListSerializer(serializers.ModelSerializer):

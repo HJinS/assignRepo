@@ -24,44 +24,29 @@ class RoutineTest(APITestCase):
             RoutineDayFactory.create_batch(3, routine_id=routine)
         return routine
 
-    def get_user_register_request(self):
-        request_data = {
-            "email": "user@example.com",
-            "password1": "password123!@#$",
-            "password2": "password123!@#$"
-        }
-        return request_data
-
-    def get_user_login_request(self):
-        requests_data = {
-            "email": "user@example.com",
-            "password": "password123!@#$"
-        }
-        return requests_data
-
     def get_create_request_data(self):
         request_data = {
-            "title": "test_title",
-            "category": "MIRACLE",
-            "goal": "test_goal",
-            "is_alarm": False,
-            "days": ["MON", "TUE", "WED"]
+            'title': 'test_title',
+            'category': 'MIRACLE',
+            'goal': 'test_goal',
+            'is_alarm': False,
+            'days': ['MON', 'TUE', 'WED', 'THU', 'FRI']
         }
         return request_data
 
     def get_update_request_data_full(self):
         request_data = {
-            "title": "test_title",
-            "category": "MIRACLE",
-            "goal": "test_goal",
-            "is_alarm": False,
-            "days": ["MON", "TUE", "WED"]
+            'title': 'test_title',
+            'category': 'MIRACLE',
+            'goal': 'test_goal',
+            'is_alarm': False,
+            'days': ['MON', 'TUE', 'WED']
         }
         return request_data
 
     def get_update_request_data_partial(self):
         request_data = {
-            "title": "new title for test",
-            "category": "HOMEWORK"
+            'title': 'new title for test',
+            'category': 'HOMEWORK'
         }
         return request_data

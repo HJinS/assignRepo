@@ -7,21 +7,22 @@ class SymbolValidator(object):
     def validate(self, password, user=None):
         if not re.findall('[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]', password):
             raise ValidationError(
-                _("The password must contain at least 1 symbol: " + "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?"), code='password_no_symbol')
+                _('The password must contain at least 1 symbol: ' + "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?"), code='password_no_symbol')
 
     def get_help_text(self):
         return _(
-            "Your password must contain at least 1 symbol: " +
+            'Your password must contain at least 1 symbol: ' +
             "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?")
+
 
 class NumberValidator(object):
     def validate(self, password, user=None):
         if not re.findall('\d', password):
             raise ValidationError(
-                _("The password must contain at least 1 digit, 0-9."),
+                _('The password must contain at least 1 digit, 0-9.'),
                 code='password_no_number')
 
     def get_help_text(self):
         return _(
-            "Your password must contain at least 1 digit, 0-9."
+            'Your password must contain at least 1 digit, 0-9.'
         )
