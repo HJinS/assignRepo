@@ -5,3 +5,5 @@
 /erl_crash.dump
 /.python-version
 migrations
+celerybeat-schedule.db
+/htmlcov

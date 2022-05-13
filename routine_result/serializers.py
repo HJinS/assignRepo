@@ -48,6 +48,8 @@ class RoutineResultSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         result = validated_data['result']
+        if not result:
+            raise serializers.ValidationError('Need result field')
         instance.result = result
         instance.save()
         return instance

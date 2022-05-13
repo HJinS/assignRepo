@@ -22,3 +22,7 @@ class ResponseDataForm(object):
         self.form = {'data': {}, 'message': {'msg': '', 'status': ''}}
         self.form['message']['status'] = status.value
         self.form['message']['msg'] = msg.value
+
+    @property
+    def get_form(self):
+        return self.form

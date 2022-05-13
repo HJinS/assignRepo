@@ -1,7 +1,7 @@
 from rest_framework.test import APIClient, APITestCase
 from ..tests.routine_factory import RoutineFactory
 from routine_day.routine_day_factory import RoutineDayFactory
-from routine_result.routine_result_factory import RoutineResultFactory
+from routine_result.tests.routine_result_factory import RoutineResultFactory
 from routine_user.tests.user_factory import UserFactory
 from datetime import datetime
 from pytz import timezone

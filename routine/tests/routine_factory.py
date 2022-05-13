@@ -18,6 +18,6 @@ class RoutineFactory(factory.django.DjangoModelFactory):
     goal = factory.Faker('sentence', nb_words=4)
     is_alarm = factory.fuzzy.FuzzyInteger(0, 1)
     is_deleted = False
-    created_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))
-    modified_at = factory.fuzzy.FuzzyDateTime(datetime(2022, 5, 4, tzinfo=timezone('Asia/Seoul')))
+    created_at = factory.fuzzy.FuzzyDateTime(datetime.now(timezone('Asia/Seoul')))
+    modified_at = factory.fuzzy.FuzzyDateTime(datetime.now(timezone('Asia/Seoul')))
 

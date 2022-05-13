@@ -2,6 +2,7 @@ from routine_user.tests.user_factory import UserFactory
 from .test_routine import RoutineTest
 from uuid import uuid4
 
+
 class RoutineDeleteTest(RoutineTest):
 
     @classmethod

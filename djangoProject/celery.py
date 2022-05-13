@@ -13,7 +13,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'createNewRoutineResult': {
         "task": "routine_result.tasks.make_results_task",
-        'schedule': crontab(minute=0, hour=0),
+        'schedule': crontab(),
     },
 }
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)

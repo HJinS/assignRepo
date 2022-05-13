@@ -1,7 +1,8 @@
-amqp==5.1.1
+amqp==1.4.9
+anyjson==0.3.3
 asgiref==3.5.1
-billiard==3.6.4.0
-celery==5.2.6
+billiard==3.3.0.23
+celery==3.1.26.post2
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.12
@@ -17,6 +18,7 @@ defusedxml==0.7.1
 dj-rest-auth==2.2.4
 Django==4.0.4
 django-allauth==0.50.0
+django-celery==3.3.1
 django-celery-results==2.3.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.1.0
@@ -27,7 +29,7 @@ idna==3.3
 inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.2
-kombu==5.2.4
+kombu==3.0.37
 MarkupSafe==2.1.1
 oauthlib==3.2.0
 packaging==21.3
