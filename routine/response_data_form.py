@@ -19,10 +19,10 @@ class ResponseMessageEnum(Enum):
 
 class ResponseDataForm(object):
     def __init__(self, status: ResponseStatusEnum, msg: ResponseMessageEnum):
-        self.form = {'data': {}, 'message': {'msg': '', 'status': ''}}
-        self.form['message']['status'] = status.value
-        self.form['message']['msg'] = msg.value
+        self.__data_form = {'data': {}, 'message': {'msg': '', 'status': ''}}
+        self.__data_form['message']['status'] = status.value
+        self.__dataform['message']['msg'] = msg.value
 
     @property
-    def get_form(self):
+    def form(self):
         return self.form

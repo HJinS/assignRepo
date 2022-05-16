@@ -20,7 +20,7 @@ class RoutineResultViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(routine_result_obj, request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-                response_data = ResponseDataForm(ResponseStatusEnum.UPDATE_OK, ResponseMessageEnum.MSG_UPDATE).get_form
+                response_data = ResponseDataForm(ResponseStatusEnum.UPDATE_OK, ResponseMessageEnum.MSG_UPDATE).form
                 response_data['data'] = {
                     'routine_result_id': routine_result_obj.routine_result_id
                 }

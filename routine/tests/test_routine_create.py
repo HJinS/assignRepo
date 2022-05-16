@@ -11,12 +11,12 @@ class RoutineCreateTest(RoutineTest):
     def test_create_routine(self):
         self.client.force_authenticate(user=self.user)
         request_data = self.get_create_request_data()
-        expected_response = ResponseDataForm(ResponseStatusEnum.CREATE_OK, ResponseMessageEnum.MSG_CREATE).get_form
+        expected_response = ResponseDataForm(ResponseStatusEnum.CREATE_OK, ResponseMessageEnum.MSG_CREATE).form
         response = self.client.post('/api/v1/routines/', request_data)
         self.assertEqual(response.data['message'], expected_response['message'])
         routine_id = response.data['data']['routine_id']
         get_response = self.client.get(f'/api/v1/routines/?routine_id={routine_id}')
-        expected_response = ResponseDataForm(ResponseStatusEnum.DETAIL_OK, ResponseMessageEnum.MSG_DETAIL).get_form
+        expected_response = ResponseDataForm(ResponseStatusEnum.DETAIL_OK, ResponseMessageEnum.MSG_DETAIL).form
         expected_response['data'] = {
             'result': 'NOT',
             'goal': request_data['goal'],

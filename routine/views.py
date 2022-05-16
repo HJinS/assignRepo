@@ -22,7 +22,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request_data)
         if serializer.is_valid(raise_exception=True):
             routine = serializer.save()
-            return_data = ResponseDataForm(ResponseStatusEnum.CREATE_OK, ResponseMessageEnum.MSG_CREATE).get_form
+            return_data = ResponseDataForm(ResponseStatusEnum.CREATE_OK, ResponseMessageEnum.MSG_CREATE).form
             return_data['data'] = {
                 'routine_id': routine.routine_id
             }
@@ -39,7 +39,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(routine_obj, request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return_data = ResponseDataForm(ResponseStatusEnum.UPDATE_OK, ResponseMessageEnum.MSG_UPDATE).get_form
+            return_data = ResponseDataForm(ResponseStatusEnum.UPDATE_OK, ResponseMessageEnum.MSG_UPDATE).form
             return_data['data'] = {
                 'routine_id': routine_id
             }
@@ -52,7 +52,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
             routine_id = request.query_params.get('routine_id')
             routine = Routine.objects.get(routine_id=routine_id, account_id=account_id)
             routine.delete()
-            return_data = ResponseDataForm(ResponseStatusEnum.DELETE_OK, ResponseMessageEnum.MSG_DELETE).get_form
+            return_data = ResponseDataForm(ResponseStatusEnum.DELETE_OK, ResponseMessageEnum.MSG_DELETE).form
             return_data['data'] = {
                 'routine_id': routine_id
             }
@@ -69,7 +69,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
             return Response("Can't get future's result", status=status.HTTP_400_BAD_REQUEST)
         query_set = RoutineResult.objects.filter(created_at=today).select_related('routine_id').filter(routine_id__account_id=account_id)
         serializer = GetRoutineListSerializer(query_set, many=True)
-        return_data = ResponseDataForm(ResponseStatusEnum.LIST_OK, ResponseMessageEnum.MSG_LIST).get_form
+        return_data = ResponseDataForm(ResponseStatusEnum.LIST_OK, ResponseMessageEnum.MSG_LIST).form
         return_data['data'] = serializer.data
         return Response(return_data, status=status.HTTP_200_OK)
 
@@ -80,7 +80,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
             filter_q &= Q(routine_id=routine_id)
             query_set = RoutineResult.objects.select_related('routine_id').filter(filter_q).prefetch_related(Prefetch('routine_id__routine_day_relate', to_attr='routine_day_res'))
             serializer = GetRoutineSerializer(query_set[0], many=False)
-            return_data = ResponseDataForm(ResponseStatusEnum.DETAIL_OK, ResponseMessageEnum.MSG_DETAIL).get_form
+            return_data = ResponseDataForm(ResponseStatusEnum.DETAIL_OK, ResponseMessageEnum.MSG_DETAIL).form
             serialized_data = serializer.data
             return_data['data'] = serialized_data
             return Response(return_data, status=status.HTTP_200_OK)
